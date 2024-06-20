@@ -1,0 +1,230 @@
+---
+title: "Atividade Wendel"
+author: "Wendel Dias"
+date: "2024-06-20"
+output: html_document
+---
+### Este script foi desenvolvido com um banco de dados próprio, no qual foram determinados os parâmetros físico-químicos de amostras de água superficial dentro da Área de Proteção Ambiental (APA) do Pratigi, localizada na Bahia, nordeste do Brasil, no ano de 2019. A análise descrita a seguir foi realizada para avaliar a variabilidade espacial dos valores dos parâmetros físico-químicos (condutividade elétrica, pH, salinidade e temperatura) em doze pontos ao longo de um transecto do rio até o estuário. A determinação desses parâmetros foi feita com o auxílio de uma sonda multiparâmetros em duas áreas distintas da APA: a primeira, uma área caracteristicamente fluvial, onde foram amostrados três pontos; e a segunda, que percorre o estuário do rio Serinhaém até sua foz.
+
+
+### Criando o objeto com os dados dos parâmetros fisico-químicos
+
+{r chunck}
+
+fisico_quimica<-read.table("fisico_new.txt",header = T)
+
+
+### Alterando os parâmetros de plotagem
+
+{r chunck}
+
+par(mfrow=c(1,1))
+par(mar=c(4,0,2,0),oma=c(4,4,2,2),mai=c(0,0,0,0))
+
+
+### Plotando agora os gráficos dos parâmetros físico-químicos
+### Vou começar plotando o gráfico do pH
+
+{r chunck}
+
+plot(pH~Distance,
+     data=fisico_quimica[fisico_quimica$Collection=="collection1",],
+     pch=16,
+     type="n",
+     ylab="pH",
+     ylim=c(5,9),
+     xlab="Transect (Rivers --> Estuary)")
+
+
+### Plotando os pontos no gráfico
+
+{r chunck}
+
+points(fisico_quimica[fisico_quimica$Collection=="collection1",]
+       $pH~fisico_quimica[fisico_quimica$Collection=="collection1",]
+       $Distance,
+       pch=16)
+
+a<-by(fisico_quimica[fisico_quimica$Collection=="collection1",]
+      $pH,fisico_quimica[fisico_quimica$Collection=="collection1",]
+      $Distance,
+      mean,
+      na.rm=T)
+
+
+### Convertendo a matriz para um dataframe
+
+{r chunck}
+
+b<-as.data.frame(as.matrix(a))
+
+
+### Adicionando a linha e pontos ao novo gráfico
+
+{r chunck}
+
+lines(as.numeric(rownames(b)),
+      b$V1,
+      lwd=2,
+      col="red")
+
+points(as.numeric(rownames(b)),
+       b$V1,
+       pch=16,
+       col="red",
+       cex=1.5)
+
+
+### Plotando os dados da condutividade elétrica no gráfico
+
+{r chunck}
+
+plot(Conductivity~Distance,
+     data=fisico_quimica[fisico_quimica$Collection=="collection1",],
+     pch=16,
+     type="n",
+     ylab="Conductivity",
+     ylim=c(0,60),
+     xlab="Transect (Rivers --> Estuary)")
+
+
+### Plotando os pontos no gráfico
+
+{r chunck}
+
+points(fisico_quimica[fisico_quimica$Collection=="collection1",]
+       $Conductivity~fisico_quimica[fisico_quimica$Collection=="collection1",]
+       $Distance,pch=16)
+
+a<-by(fisico_quimica[fisico_quimica$Collection=="collection1",]
+      $Conductivity,
+      fisico_quimica[fisico_quimica$Collection=="collection1",]
+      $Distance,
+      mean,
+      a.rm=T)
+
+
+### Convertendo a matriz para um dataframe
+
+{r chunck}
+
+b<-as.data.frame(as.matrix(a))
+
+
+### Adicionando a linha e pontos ao novo gráfico
+
+{r chunck}
+
+lines(as.numeric(rownames(b)),
+      b$V1,
+      lwd=2,
+      col="red")
+
+points(as.numeric(rownames(b)),
+       b$V1,
+       pch=16,
+       col="red",
+       cex=1.5)
+
+
+### Plotando os dados de salinidade
+
+{r chunck}
+
+plot(Salinity~Distance,
+     data=fisico_quimica[fisico_quimica$Collection=="collection1",],
+     pch=16,
+     type="n",
+     ylab="Salinity",
+     ylim=c(0,60),
+     xlab="Transect (Rivers --> Estuary)")
+
+
+### Plotando os pontos no gráfico
+
+{r chunck}
+
+points(fisico_quimica[fisico_quimica$Collection=="collection1",]
+       $Salinity~fisico_quimica[fisico_quimica$Collection=="collection1",]
+       $Distance,pch=16)
+
+
+a<-by(fisico_quimica[fisico_quimica$Collection=="collection1",]
+      $Salinity,fisico_quimica[fisico_quimica$Collection=="collection1",]
+      $Distance,
+      mean,
+      a.rm=T)
+      
+  ### Convertendo a matriz para um dataframe
+
+{r chunck}
+
+b<-as.data.frame(as.matrix(a))
+
+
+### Adicionando a linha e pontos ao novo gráfico
+
+{r chunck}
+
+lines(as.numeric(rownames(b)),
+      b$V1,
+      lwd=2,
+      col="red")
+
+points(as.numeric(rownames(b)),
+       b$V1,
+       pch=16,
+       col="red",
+       cex=1.5)
+
+
+### Plotando os dados de temperatura
+
+{r chunck}
+
+plot(Temperature~Distance,
+     data=fisico_quimica[fisico_quimica$Collection=="collection1",],
+     pch=16,
+     type="n",
+     ylab="Temperature",
+     ylim=c(0,60),
+     xlab="Transect (Rivers --> Estuary)")
+
+
+### Plotando os pontos no gráfico
+
+{r chunck}
+
+points(fisico_quimica[fisico_quimica$Collection=="collection1",]
+       $Temperature~fisico_quimica[fisico_quimica$Collection=="collection1",]
+       $Distance,pch=16)
+
+
+a<-by(fisico_quimica[fisico_quimica$Collection=="collection1",]
+      $Temperature,fisico_quimica[fisico_quimica$Collection=="collection1",]
+      $Distance,
+      mean,
+      a.rm=T)
+
+
+### Convertendo a matriz para um dataframe
+
+{r chunck}
+
+b<-as.data.frame(as.matrix(a))
+
+
+### Adicionando a linha e pontos ao novo gráfico
+
+{r chunck}
+
+lines(as.numeric(rownames(b)),
+      b$V1,
+      lwd=2,
+      col="red")
+
+points(as.numeric(rownames(b)),
+       b$V1,
+       pch=16,
+       col="red",
+       cex=1.5)
