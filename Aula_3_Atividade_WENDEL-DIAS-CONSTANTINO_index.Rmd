@@ -5,9 +5,8 @@ date: "2024-06-11"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
+```{r , }
+
 
 library(rgbif)
 library(ggplot2)
@@ -22,30 +21,32 @@ library(ggmap)
 library(maps)
 library(mapdata)
 
+```
+
+
 
 ## Baixando o banco de dados de coorrência do tubarão branco direto do GBIF
 
-{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r, }
+
 
 TubBranco_gbif <- occ_data(scientificName = "Carcharodon carcharias", hasCoordinate = TRUE, hasGeospatialIssue=FALSE)
 
 #####Dimensões
 dim(TubBranco_gbif)
-
+```
 
 ## Checando os problemas reportados
 
-{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
- 
- unique() %>% 
-  strsplit(., "[,]") %>% 
-  unlist()
+```{r, }
 
-gbif_issues() %>% 
-  data.frame() %>% 
-  filter(code %in% issues_gbif)
+#  unique() %>% 
+#   strsplit(., "[,]") %>% 
+#   unlist()
+# 
+# gbif_issues() %>% 
+#   data.frame() %>% 
+#   filter(code %in% issues_gbif)
 
 TubBranco_gbif_novo <- TubBranco_gbif$data %>%
   dplyr::select(scientificName, acceptedScientificName, decimalLatitude, decimalLongitude,
@@ -54,37 +55,28 @@ TubBranco_gbif_novo <- TubBranco_gbif$data %>%
 
 TubBranco_gbif_novo <- TubBranco_gbif_novo %>% 
   distinct()
-knitr::opts_chunk$set(echo = TRUE)
 
+```
 
 ## Checando os níveis dos fatores
 
-{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r , }
 
 lapply(TubBranco_gbif_novo, unique)
 
-
+```
 ## Agora vou usar uma função para classificar os ocorrências suspeitas
 
-{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r , }
 
 flag_outlier <- function(df, species){
 
-
 ## funcao para classificar ocorrencias suspeitas
-
 ## baseada no calculo do centroide de todas ocorrencias
-
 ## indica como 'check' as ocorrencias que tem distancias até o centroide
-
 ## acima do 90th quantil (default) das distancias calculadas
 
-{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-
-  dados <- df %>% 
+    dados <- df %>% 
     dplyr::filter(scientificName == species); 
   
   dados2 <- geosphere::distVincentyEllipsoid(
@@ -106,11 +98,10 @@ knitr::opts_chunk$set(echo = TRUE)
   
 }
 
-
+```
 ## Agora vou classificar as ocorrências
 
-{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r , }
 
 marcados <- TubBranco_gbif$data %>% 
   data.frame() %>% 
@@ -118,47 +109,44 @@ marcados <- TubBranco_gbif$data %>%
   distinct()
 
 world <- map_data('world')
-
+```
 
 ## Plotando o mapa de ocorrências do tubarão branco (Carcharodon carcharias)
 
-{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r , }
 
-ggplot() +
+marcados %>% 
+  ggplot() +
   geom_polygon(data = world, aes(x = long, y = lat, group = group)) +
   coord_fixed() +
   theme_classic() +
   geom_point(data = TubBranco_gbif_novo, aes(x = decimalLongitude, y = decimalLatitude), color = "red") +
   labs(x = "longitude", y = "latitude", title = expression(italic("Carcharodon carcharias")))
 
+```
 
 ## Checando a profundidade
 
-{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r , }
 
-TubBranco_gbif_novo %>% 
+TubBranco_gbif$data %>% 
   ggplot(aes(x = depth, fill = waterBody)) +
   geom_histogram()
 
+```
 
 ## Enfim, chegamos na parte do OBIS
 
-{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-
-install.packages("robis")
+```{r , }
+# install.packages("robis")
 library(robis)
 
 Tubarao_obis <- robis::occurrence("Carcharodon carcharias")
-
+```
 
 ## Checando os dados
 
-{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-
+```{r , }
 names(Tubarao_obis)
 
 Tubarao_obis_novo <- Tubarao_obis %>% 
@@ -167,31 +155,28 @@ Tubarao_obis_novo <- Tubarao_obis %>%
                 datasetName, recordedBy, depth, locality, habitat) %>% 
   distinct()
 
-
+```
 ## Checando agora os problemas reportados (famosos flags)
 
-{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r , }
 
 Tubarao_obis_novo %>% 
   distinct(flags)
 
-
+```
 ## Checando se há Nas no datasetName
 
-{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r , }
 
 Tubarao_obis_novo %>% 
   filter(!flags %in% c("no_depth,on_land", "on_land", "on_land,depth_exceeds_bath", "depth_exceeds_bath,on_land"),
          is.na(datasetName)) %>% 
   distinct(waterBody)
-
+```
 
 ## Depth está OK
 
-{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r , }
 
 Tubarao_obis_novo %>% 
   filter(!flags %in% c("no_depth,on_land", "on_land", "on_land,depth_exceeds_bath", "depth_exceeds_bath,on_land"),
@@ -199,69 +184,62 @@ Tubarao_obis_novo %>%
          !waterBody %in% c("Mar Caribe", "atlantique", "South Atlantic", "Atlantic Ocean", "Caribe", "Bahia de La Habana", "WESTERN ATLANTIC", "Gulf of Mexico", "CARIB")) %>% 
   ggplot(aes(x = depth, fill = waterBody)) +
   geom_histogram() 
-
+```
 
 ## Checando os níveis
 
-{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-
+```{r , }
 Tubarao_obis_novo %>% 
   filter(!flags %in% c("no_depth,on_land", "on_land", "on_land,depth_exceeds_bath", "depth_exceeds_bath,on_land"),
          !is.na(datasetName),
          !waterBody %in% c("Mar Caribe", "atlantique", "South Atlantic", "Atlantic Ocean", "Caribe", "Bahia de La Habana", "WESTERN ATLANTIC", "Gulf of Mexico", "CARIB")) %>% 
   lapply(., unique)
-
+```
 
 ## Agora está tudo OK
 
-{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r , }
+
 
 Tubarao_obis_mod <- Tubarao_obis_novo %>% 
   filter(!flags %in% c("no_depth,on_land", "on_land", "on_land,depth_exceeds_bath", "depth_exceeds_bath,on_land"),
          !is.na(datasetName),
          !waterBody %in% c("Mar Caribe", "atlantique", "South Atlantic", "Atlantic Ocean", "Caribe", "Bahia de La Habana", "WESTERN ATLANTIC", "Gulf of Mexico", "CARIB", NA))
 
-
+```
 ## Agora plotando o mapa OK
 
-{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-
+```{r , }
 ggplot() +
   geom_polygon(data = world, aes(x = long, y = lat, group = group)) +
   coord_fixed() +
   theme_classic() +
   geom_point(data = Tubarao_obis_mod, aes(x = decimalLongitude, y = decimalLatitude, color = waterBody)) +
   labs(x = "longitude", y = "latitude", title = expression(italic("Carcharodon carcharias")))
-
+```
 
 ## Unindo o GBIF e o OBIS
 # Ver as diferenças
 
-{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r , }
 
 setdiff(names(Tubarao_obis_novo), names(Tubarao_obis_mod))
 
 setdiff(names(Tubarao_obis_novo), names(Tubarao_obis_mod))
 
-
+```
 ## Carregando e instalando pacotes necessários para rodar as análises
 
-{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r , }
 
 library(tidyr)
-install.packages("tribble")
+# install.packages("tibble")
 library(tibble)
-
+```
 
 ## Todos os dados
 
-{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r , }
 
 all_data <- bind_rows(Tubarao_obis_novo %>% 
                         mutate(repo = paste0("gbif", row.names(.))), 
@@ -274,12 +252,12 @@ all_data <- bind_rows(Tubarao_obis_novo %>%
   separate(col = "occ", into = c("datasetName", "rn"), sep = 4) %>%
   mutate(scientificName = "Carcharodon carcharias") %>% 
   dplyr::select(-rn)
-
+```
 
 ## Mapeando as ocorrências
 
-{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r , }
+
 
 ggplot() +
   geom_polygon(data = world, aes(x = long, y = lat, group = group)) +
@@ -289,5 +267,6 @@ ggplot() +
   #theme(legend.title = element_blank()) +
   labs(x = "longitude", y = "latitude", title = expression(italic("Carcharodon carcharias")))
 
-dir.create("data")
-write.csv(all_data, "data/occ_GBIF-OBIS_tub_branco.csv", row.names = FALSE)
+# dir.create("data")
+# write.csv(all_data, "data/occ_GBIF-OBIS_tub_branco.csv", row.names = FALSE)
+``` 

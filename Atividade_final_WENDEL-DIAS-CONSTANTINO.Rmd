@@ -9,23 +9,23 @@ output: html_document
 
 ### Criando o objeto com os dados dos parâmetros fisico-químicos
 
-{r chunck}
+```{r }
 
 fisico_quimica<-read.table("fisico_new.txt",header = T)
-
+```
 
 ### Alterando os parâmetros de plotagem
 
-{r chunck}
+```{r }
 
 par(mfrow=c(1,1))
 par(mar=c(4,0,2,0),oma=c(4,4,2,2),mai=c(0,0,0,0))
-
+```
 
 ### Plotando agora os gráficos dos parâmetros físico-químicos
 ### Vou começar plotando o gráfico do pH
 
-{r chunck}
+```{r }
 
 plot(pH~Distance,
      data=fisico_quimica[fisico_quimica$Collection=="collection1",],
@@ -34,11 +34,11 @@ plot(pH~Distance,
      ylab="pH",
      ylim=c(5,9),
      xlab="Transect (Rivers --> Estuary)")
-
+```
 
 ### Plotando os pontos no gráfico
 
-{r chunck}
+```{r }
 
 points(fisico_quimica[fisico_quimica$Collection=="collection1",]
        $pH~fisico_quimica[fisico_quimica$Collection=="collection1",]
@@ -50,18 +50,18 @@ a<-by(fisico_quimica[fisico_quimica$Collection=="collection1",]
       $Distance,
       mean,
       na.rm=T)
-
+```
 
 ### Convertendo a matriz para um dataframe
 
-{r chunck}
+```{r }
 
 b<-as.data.frame(as.matrix(a))
 
-
+```
 ### Adicionando a linha e pontos ao novo gráfico
 
-{r chunck}
+```{r }
 
 lines(as.numeric(rownames(b)),
       b$V1,
@@ -73,11 +73,11 @@ points(as.numeric(rownames(b)),
        pch=16,
        col="red",
        cex=1.5)
-
+```
 
 ### Plotando os dados da condutividade elétrica no gráfico
 
-{r chunck}
+```{r }
 
 plot(Conductivity~Distance,
      data=fisico_quimica[fisico_quimica$Collection=="collection1",],
@@ -86,11 +86,11 @@ plot(Conductivity~Distance,
      ylab="Conductivity",
      ylim=c(0,60),
      xlab="Transect (Rivers --> Estuary)")
-
+```
 
 ### Plotando os pontos no gráfico
 
-{r chunck}
+```{r }
 
 points(fisico_quimica[fisico_quimica$Collection=="collection1",]
        $Conductivity~fisico_quimica[fisico_quimica$Collection=="collection1",]
@@ -102,18 +102,18 @@ a<-by(fisico_quimica[fisico_quimica$Collection=="collection1",]
       $Distance,
       mean,
       a.rm=T)
-
+```
 
 ### Convertendo a matriz para um dataframe
 
-{r chunck}
+```{r }
 
 b<-as.data.frame(as.matrix(a))
-
+```
 
 ### Adicionando a linha e pontos ao novo gráfico
 
-{r chunck}
+```{r }
 
 lines(as.numeric(rownames(b)),
       b$V1,
@@ -126,10 +126,10 @@ points(as.numeric(rownames(b)),
        col="red",
        cex=1.5)
 
-
+```
 ### Plotando os dados de salinidade
 
-{r chunck}
+```{r }
 
 plot(Salinity~Distance,
      data=fisico_quimica[fisico_quimica$Collection=="collection1",],
@@ -139,10 +139,10 @@ plot(Salinity~Distance,
      ylim=c(0,60),
      xlab="Transect (Rivers --> Estuary)")
 
-
+```
 ### Plotando os pontos no gráfico
 
-{r chunck}
+```{r }
 
 points(fisico_quimica[fisico_quimica$Collection=="collection1",]
        $Salinity~fisico_quimica[fisico_quimica$Collection=="collection1",]
@@ -154,17 +154,17 @@ a<-by(fisico_quimica[fisico_quimica$Collection=="collection1",]
       $Distance,
       mean,
       a.rm=T)
-      
+```     
   ### Convertendo a matriz para um dataframe
 
-{r chunck}
+```{r }
 
 b<-as.data.frame(as.matrix(a))
 
-
+```
 ### Adicionando a linha e pontos ao novo gráfico
 
-{r chunck}
+```{r }
 
 lines(as.numeric(rownames(b)),
       b$V1,
@@ -176,11 +176,11 @@ points(as.numeric(rownames(b)),
        pch=16,
        col="red",
        cex=1.5)
-
+```
 
 ### Plotando os dados de temperatura
 
-{r chunck}
+```{r }
 
 plot(Temperature~Distance,
      data=fisico_quimica[fisico_quimica$Collection=="collection1",],
@@ -189,11 +189,11 @@ plot(Temperature~Distance,
      ylab="Temperature",
      ylim=c(0,60),
      xlab="Transect (Rivers --> Estuary)")
-
+```
 
 ### Plotando os pontos no gráfico
 
-{r chunck}
+```{r }
 
 points(fisico_quimica[fisico_quimica$Collection=="collection1",]
        $Temperature~fisico_quimica[fisico_quimica$Collection=="collection1",]
@@ -205,18 +205,18 @@ a<-by(fisico_quimica[fisico_quimica$Collection=="collection1",]
       $Distance,
       mean,
       a.rm=T)
-
+```
 
 ### Convertendo a matriz para um dataframe
 
-{r chunck}
+```{r }
 
 b<-as.data.frame(as.matrix(a))
-
+```
 
 ### Adicionando a linha e pontos ao novo gráfico
 
-{r chunck}
+```{r }
 
 lines(as.numeric(rownames(b)),
       b$V1,
@@ -228,3 +228,4 @@ points(as.numeric(rownames(b)),
        pch=16,
        col="red",
        cex=1.5)
+```
